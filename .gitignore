@@ -3,9 +3,9 @@
 *.png
 *.pcd
 
-*/data
-*/models
-*/test
-*/results
-*/train_log
-*/__pycache__
+data
+models
+test
+results
+train_log
+__pycache__
