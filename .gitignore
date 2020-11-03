@@ -4,6 +4,7 @@
 *.pcd
 
 */data
+*/models
 */test
 */results
 */train_log
