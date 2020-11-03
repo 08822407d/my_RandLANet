@@ -13,7 +13,7 @@ import pickle, argparse, os
 class Semantic3D:
     def __init__(self):
         self.name = 'Semantic3D'
-        self.path = '/data/semantic3d'
+        self.path = './data/semantic3d'
         self.label_to_names = {0: 'unlabeled',
                                1: 'man-made terrain',
                                2: 'natural terrain',
@@ -365,6 +365,9 @@ if __name__ == '__main__':
             snap_steps = [int(f[:-5].split('-')[-1]) for f in os.listdir(snap_path) if f[-5:] == '.meta']
             chosen_step = np.sort(snap_steps)[-1]
             chosen_snap = os.path.join(snap_path, 'snap-{:d}'.format(chosen_step))
+            
+            print (chosen_snap)
+
         tester = ModelTester(model, dataset, restore_snap=chosen_snap)
         tester.test(model, dataset)
 

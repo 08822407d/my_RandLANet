@@ -1,5 +1,10 @@
 *.gif
 *.jpg
 *.png
+*.pcd
 
 */data
+*/test
+*/results
+*/train_log
+*/__pycache__

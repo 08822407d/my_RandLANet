@@ -14,6 +14,9 @@ from helper_tool import DataProcessing as DP
 
 grid_size = 0.06
 dataset_path = ROOT_DIR + '/data/semantic3d/original_data'
+
+print (dataset_path)
+
 original_pc_folder = join(dirname(dataset_path), 'original_ply')
 sub_pc_folder = join(dirname(dataset_path), 'input_{:.3f}'.format(grid_size))
 
@@ -37,7 +40,7 @@ for pc_path in glob.glob(join(dataset_path, '*.txt')):
         labels = DP.load_label_semantic3d(label_path)
         full_ply_path = join(original_pc_folder, file_name + '.ply')
 
-        #  Subsample to save space
+        # Subsample to save space
         sub_points, sub_colors, sub_labels = DP.grid_sub_sampling(pc[:, :3].astype(np.float32),
                                                                   pc[:, 4:7].astype(np.uint8), labels, 0.01)
         sub_labels = np.squeeze(sub_labels)
