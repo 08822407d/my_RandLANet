@@ -89,7 +89,9 @@ class Semantic3D:
             'sg28_station5_xyz_intensity_rgb.ply': 'sg28_5.labels',
             'stgallencathedral_station1_intensity_rgb.ply': 'stgallencathedral1.labels',
             'stgallencathedral_station3_intensity_rgb.ply': 'stgallencathedral3.labels',
-            'stgallencathedral_station6_intensity_rgb.ply': 'stgallencathedral6.labels'}
+            'stgallencathedral_station6_intensity_rgb.ply': 'stgallencathedral6.labels',
+            '190515_045742-13-04-54-898_clip.ply': '190515_045742-13-04-54-898_clip.labels'}
+        # self.ascii_files = {'190515_045742-13-04-54-898_clip.ply': '190515_045742-13-04-54-898_clip.labels'}
 
         self.load_sub_sampled_clouds(cfg.sub_grid_size)
 
