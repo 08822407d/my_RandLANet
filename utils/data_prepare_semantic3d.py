@@ -20,7 +20,7 @@ print (dataset_path)
 original_pc_folder = join(dirname(dataset_path), 'original_ply')
 sub_pc_folder = join(dirname(dataset_path), 'input_{:.3f}'.format(grid_size))
 
-# print( original_pc_folder + " - " + sub_pc_folder)
+print( original_pc_folder + " - " + sub_pc_folder)
 
 os.mkdir(original_pc_folder) if not exists(original_pc_folder) else None
 os.mkdir(sub_pc_folder) if not exists(sub_pc_folder) else None

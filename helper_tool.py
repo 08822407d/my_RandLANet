@@ -73,8 +73,8 @@ class ConfigSemantic3D:
     num_classes = 8  # Number of valid classes
     sub_grid_size = 0.06  # preprocess_parameter
 
-    batch_size = 1  # batch_size during training
-    val_batch_size = 6  # batch_size during validation and test
+    batch_size = 4  # batch_size during training
+    val_batch_size = 16  # batch_size during validation and test
     train_steps = 400  # Number of steps per epochs
     val_steps = 100  # Number of validation steps per epoch
 
