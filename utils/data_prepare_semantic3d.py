@@ -15,8 +15,6 @@ from helper_tool import DataProcessing as DP
 grid_size = 0.06
 dataset_path = ROOT_DIR + '/data/semantic3d/original_data'
 
-print (dataset_path)
-
 original_pc_folder = join(dirname(dataset_path), 'original_ply')
 sub_pc_folder = join(dirname(dataset_path), 'input_{:.3f}'.format(grid_size))
 

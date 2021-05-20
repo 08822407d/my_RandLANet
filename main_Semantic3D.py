@@ -90,9 +90,33 @@ class Semantic3D:
             'stgallencathedral_station1_intensity_rgb.ply': 'stgallencathedral1.labels',
             'stgallencathedral_station3_intensity_rgb.ply': 'stgallencathedral3.labels',
             'stgallencathedral_station6_intensity_rgb.ply': 'stgallencathedral6.labels',
-            '190515_045742-13-04-54-898_clip.ply': '190515_045742-13-04-54-898_clip.labels'}
-        # self.ascii_files = {'190515_045742-13-04-54-898_clip.ply': '190515_045742-13-04-54-898_clip.labels'}
-
+            'merge-1.ply': 'merge-1.labels',
+            'merge-2.ply': 'merge-2.labels'}
+            # 'shanghai_01.ply': 'shanghai_01.labels',
+            # 'shanghai_02.ply': 'shanghai_02.labels',
+            # 'shanghai_03.ply': 'shanghai_03.labels',
+            # 'shanghai_04.ply': 'shanghai_04.labels',
+            # 'shanghai_05.ply': 'shanghai_05.labels',
+            # 'shanghai_06.ply': 'shanghai_06.labels',
+            # 'shanghai_07.ply': 'shanghai_07.labels',
+            # 'shanghai_08.ply': 'shanghai_08.labels'}
+            # 'shanghai-09.ply': 'shanghai-05.labels',
+            # 'shanghai-10.ply': 'shanghai-10.labels',
+            # 'shanghai-11.ply': 'shanghai-11.labels',
+            # 'shanghai-12.ply': 'shanghai-12.labels',
+            # 'shanghai-13.ply': 'shanghai-13.labels',
+            # 'shanghai-14.ply': 'shanghai-14.labels',
+            # 'shanghai-15.ply': 'shanghai-15.labels',
+            # 'shanghai-16.ply': 'shanghai-16.labels',
+            # 'shanghai-17.ply': 'shanghai-17.labels',
+            # 'shanghai-18.ply': 'shanghai-18.labels',
+            # 'shanghai-19.ply': 'shanghai-19.labels',
+            # 'shanghai-20.ply': 'shanghai-20.labels',
+            # 'shanghai-21.ply': 'shanghai-21.labels',
+            # 'shanghai-22.ply': 'shanghai-22.labels',
+            # 'shanghai-23.ply': 'shanghai-23.labels',
+            # 'shanghai-24.ply': 'shanghai-24.labels',
+            # 'shanghai-25.ply': 'shanghai-25.labels'}
         self.load_sub_sampled_clouds(cfg.sub_grid_size)
 
     def load_sub_sampled_clouds(self, sub_grid_size):

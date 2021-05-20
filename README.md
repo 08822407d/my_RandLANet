@@ -7,10 +7,10 @@ This code has been tested with Python 3.5, Tensorflow 1.11, CUDA 9.0 and cuDNN 7
 Clone the repository
 git clone --depth=1 https://github.com/QingyongHu/RandLA-Net && cd RandLA-Net
 Setup python environment
-conda create -n randlanet python=3.5
-source activate randlanet
-pip install -r helper_requirements.txt
-sh compile_op.sh
+    conda create -n randlanet python=3.5
+    source activate randlanet
+    python3 -m pip install -r helper_requirements.txt
+    sh compile_op.sh
 Update 03/21/2020, pre-trained models and results are available now. You can download the pre-trained models and results here. Note that, please specify the model path in the main function (e.g., main_S3DIS.py) if you want to use the pre-trained model and have a quick try of our RandLA-Net.
 
 (2) S3DIS
