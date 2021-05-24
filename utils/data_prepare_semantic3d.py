@@ -100,7 +100,7 @@ for pc_path in glob.glob(join(dataset_path, '*.txt')):
     if exists(join(sub_pc_folder, file_name + '_KDTree.pkl')):
         continue
 
-    thd_pool.apply_async(do_kdtree, args=(pc_path))
+    thd_pool.apply_async(do_kdtree, args=(pc_path,))
 
 thd_pool.close()
 thd_pool.join()
