@@ -91,7 +91,9 @@ class Semantic3D:
             'stgallencathedral_station3_intensity_rgb.ply': 'stgallencathedral3.labels',
             'stgallencathedral_station6_intensity_rgb.ply': 'stgallencathedral6.labels',
             'merge-1.ply': 'merge-1.labels',
-            'merge-2.ply': 'merge-2.labels'}
+            'merge-1-nc.ply': 'merge-1-nc.labels',
+            'merge-2.ply': 'merge-2.labels',
+            'merge-2-nc.ply': 'merge-2-nc.labels'}
             # 'shanghai_01.ply': 'shanghai_01.labels',
             # 'shanghai_02.ply': 'shanghai_02.labels',
             # 'shanghai_03.ply': 'shanghai_03.labels',
