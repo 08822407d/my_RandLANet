@@ -11,9 +11,9 @@ import pickle, argparse, os
 
 
 class Semantic3D:
-    def __init__(self):
+    def __init__(self, data_path):
         self.name = 'Semantic3D'
-        self.path = './data/semantic3d'
+        self.path = data_path
         self.label_to_names = {0: 'unlabeled',
                                1: 'man-made terrain',
                                2: 'natural terrain',
@@ -94,32 +94,8 @@ class Semantic3D:
             'merge-1-nc.ply': 'merge-1-nc.labels',
             'merge-2.ply': 'merge-2.labels',
             'merge-2-nc.ply': 'merge-2-nc.labels'}
-            # 'shanghai_01.ply': 'shanghai_01.labels',
-            # 'shanghai_02.ply': 'shanghai_02.labels',
-            # 'shanghai_03.ply': 'shanghai_03.labels',
-            # 'shanghai_04.ply': 'shanghai_04.labels',
-            # 'shanghai_05.ply': 'shanghai_05.labels',
-            # 'shanghai_06.ply': 'shanghai_06.labels',
-            # 'shanghai_07.ply': 'shanghai_07.labels',
-            # 'shanghai_08.ply': 'shanghai_08.labels'}
-            # 'shanghai-09.ply': 'shanghai-05.labels',
-            # 'shanghai-10.ply': 'shanghai-10.labels',
-            # 'shanghai-11.ply': 'shanghai-11.labels',
-            # 'shanghai-12.ply': 'shanghai-12.labels',
-            # 'shanghai-13.ply': 'shanghai-13.labels',
-            # 'shanghai-14.ply': 'shanghai-14.labels',
-            # 'shanghai-15.ply': 'shanghai-15.labels',
-            # 'shanghai-16.ply': 'shanghai-16.labels',
-            # 'shanghai-17.ply': 'shanghai-17.labels',
-            # 'shanghai-18.ply': 'shanghai-18.labels',
-            # 'shanghai-19.ply': 'shanghai-19.labels',
-            # 'shanghai-20.ply': 'shanghai-20.labels',
-            # 'shanghai-21.ply': 'shanghai-21.labels',
-            # 'shanghai-22.ply': 'shanghai-22.labels',
-            # 'shanghai-23.ply': 'shanghai-23.labels',
-            # 'shanghai-24.ply': 'shanghai-24.labels',
-            # 'shanghai-25.ply': 'shanghai-25.labels'}
         self.load_sub_sampled_clouds(cfg.sub_grid_size)
+
 
     def load_sub_sampled_clouds(self, sub_grid_size):
 
@@ -182,6 +158,7 @@ class Semantic3D:
                 self.test_labels += [labels]
         print('finished')
         return
+
 
     # Generate the input data flow
     def get_batch_gen(self, split):
@@ -261,6 +238,7 @@ class Semantic3D:
         gen_shapes = ([None, 3], [None, 3], [None], [None], [None])
         return gen_func, gen_types, gen_shapes
 
+
     def get_tf_mapping(self):
         # Collect flat inputs
         def tf_map(batch_xyz, batch_features, batch_labels, batch_pc_idx, batch_cloud_idx):
@@ -331,6 +309,7 @@ class Semantic3D:
         stacked_features = tf.concat([transformed_xyz, rgb], axis=-1)
         return stacked_features
 
+
     def init_input_pipeline(self):
         print('Initiating input pipelines')
         cfg.ignored_label_inds = [self.label_to_idx[ign_label] for ign_label in self.ignored_labels]
@@ -365,6 +344,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--gpu', type=int, default=0, help='the number of GPUs to use [default: 0]')
     parser.add_argument('--mode', type=str, default='train', help='options: train, test, vis')
+    parser.add_argument('--data_path', type=str, default='None', help='dataset path, for the correspond mode')
     parser.add_argument('--model_path', type=str, default='None', help='pretrained model path')
     FLAGS = parser.parse_args()
 
@@ -374,7 +354,8 @@ if __name__ == '__main__':
     os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
     Mode = FLAGS.mode
-    dataset = Semantic3D()
+    data_path = FLAGS.data_path
+    dataset = Semantic3D(data_path)
     dataset.init_input_pipeline()
 
     if Mode == 'train':
