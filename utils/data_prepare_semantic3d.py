@@ -8,6 +8,7 @@ from multiprocessing import Pool
 
 
 def do_kdtree(pc_path):
+    print(pc_path)
     pc = DP.load_pc_semantic3d(pc_path)
     # check if label exists
     label_path = pc_path[:-4] + '.labels'
@@ -93,7 +94,6 @@ os.mkdir(original_pc_folder) if not exists(original_pc_folder) else None
 os.mkdir(sub_pc_folder) if not exists(sub_pc_folder) else None
 
 for pc_path in glob.glob(join(dataset_path, '*.txt')):
-    print(pc_path)
     file_name = pc_path.split('/')[-1][:-4]
 
     # check if it has already calculated
