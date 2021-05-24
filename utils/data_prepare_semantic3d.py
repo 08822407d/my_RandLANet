@@ -6,6 +6,32 @@ import sys
 import multiprocessing
 from multiprocessing import Pool
 
+cpu_nr = multiprocessing.cpu_count()
+thd_pool = Pool(cpu_nr)
+
+BASE_DIR = dirname(abspath(__file__))
+ROOT_DIR = dirname(BASE_DIR)
+
+sys.path.append(BASE_DIR)
+sys.path.append(ROOT_DIR)
+from helper_ply import write_ply
+from helper_tool import DataProcessing as DP
+
+parser = argparse.ArgumentParser()
+parser.add_argument('--grid_size', type=float, default=0.06, help='grid_size [default: 0.06]')
+FLAGS = parser.parse_args()
+
+grid_size = FLAGS.grid_size
+dataset_path = ROOT_DIR + '/data/semantic3d/original_data'
+
+original_pc_folder = join(dirname(dataset_path), 'original_ply')
+sub_pc_folder = join(dirname(dataset_path), 'input_{:.3f}'.format(grid_size))
+
+# print( original_pc_folder + " - " + sub_pc_folder)
+
+os.mkdir(original_pc_folder) if not exists(original_pc_folder) else None
+os.mkdir(sub_pc_folder) if not exists(sub_pc_folder) else None
+
 
 def do_kdtree(pc_path):
     print(pc_path)
@@ -65,33 +91,6 @@ def do_kdtree(pc_path):
         with open(proj_save, 'wb') as f:
             pickle.dump([proj_idx, labels], f)
 
-
-
-cpu_nr = multiprocessing.cpu_count()
-thd_pool = Pool(cpu_nr)
-
-BASE_DIR = dirname(abspath(__file__))
-ROOT_DIR = dirname(BASE_DIR)
-
-sys.path.append(BASE_DIR)
-sys.path.append(ROOT_DIR)
-from helper_ply import write_ply
-from helper_tool import DataProcessing as DP
-
-parser = argparse.ArgumentParser()
-parser.add_argument('--grid_size', type=float, default=0.06, help='grid_size [default: 0.06]')
-FLAGS = parser.parse_args()
-
-grid_size = FLAGS.grid_size
-dataset_path = ROOT_DIR + '/data/semantic3d/original_data'
-
-original_pc_folder = join(dirname(dataset_path), 'original_ply')
-sub_pc_folder = join(dirname(dataset_path), 'input_{:.3f}'.format(grid_size))
-
-# print( original_pc_folder + " - " + sub_pc_folder)
-
-os.mkdir(original_pc_folder) if not exists(original_pc_folder) else None
-os.mkdir(sub_pc_folder) if not exists(sub_pc_folder) else None
 
 for pc_path in glob.glob(join(dataset_path, '*.txt')):
     file_name = pc_path.split('/')[-1][:-4]
