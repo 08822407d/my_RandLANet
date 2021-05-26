@@ -11,7 +11,7 @@ import pickle, argparse, os
 
 
 class Semantic3D:
-    def __init__(self, data_path):
+    def __init__(self, data_path, Mode):
         self.name = 'Semantic3D'
         self.path = data_path
         self.label_to_names = {0: 'unlabeled',
@@ -42,9 +42,9 @@ class Semantic3D:
         self.test_files = []
         cloud_names = [file_name[:-4] for file_name in os.listdir(self.original_folder) if file_name[-4:] == '.txt']
         for pc_name in cloud_names:
-            if exists(join(self.original_folder, pc_name + '.labels')):
+            if Mode == 'train':
                 self.train_files.append(join(self.sub_pc_folder, pc_name + '.ply'))
-            else:
+            elif Mode == 'test':
                 self.test_files.append(join(self.full_pc_folder, pc_name + '.ply'))
 
         self.train_files = np.sort(self.train_files)
@@ -69,31 +69,11 @@ class Semantic3D:
         self.input_colors = {'training': [], 'validation': [], 'test': []}
         self.input_labels = {'training': [], 'validation': []}
 
+        self.ascii_files = {}
         # Ascii files dict for testing
-        self.ascii_files = {
-            'MarketplaceFeldkirch_Station4_rgb_intensity-reduced.ply': 'marketsquarefeldkirch4-reduced.labels',
-            'sg27_station10_rgb_intensity-reduced.ply': 'sg27_10-reduced.labels',
-            'sg28_Station2_rgb_intensity-reduced.ply': 'sg28_2-reduced.labels',
-            'StGallenCathedral_station6_rgb_intensity-reduced.ply': 'stgallencathedral6-reduced.labels',
-            'birdfountain_station1_xyz_intensity_rgb.ply': 'birdfountain1.labels',
-            'castleblatten_station1_intensity_rgb.ply': 'castleblatten1.labels',
-            'castleblatten_station5_xyz_intensity_rgb.ply': 'castleblatten5.labels',
-            'marketplacefeldkirch_station1_intensity_rgb.ply': 'marketsquarefeldkirch1.labels',
-            'marketplacefeldkirch_station4_intensity_rgb.ply': 'marketsquarefeldkirch4.labels',
-            'marketplacefeldkirch_station7_intensity_rgb.ply': 'marketsquarefeldkirch7.labels',
-            'sg27_station10_intensity_rgb.ply': 'sg27_10.labels',
-            'sg27_station3_intensity_rgb.ply': 'sg27_3.labels',
-            'sg27_station6_intensity_rgb.ply': 'sg27_6.labels',
-            'sg27_station8_intensity_rgb.ply': 'sg27_8.labels',
-            'sg28_station2_intensity_rgb.ply': 'sg28_2.labels',
-            'sg28_station5_xyz_intensity_rgb.ply': 'sg28_5.labels',
-            'stgallencathedral_station1_intensity_rgb.ply': 'stgallencathedral1.labels',
-            'stgallencathedral_station3_intensity_rgb.ply': 'stgallencathedral3.labels',
-            'stgallencathedral_station6_intensity_rgb.ply': 'stgallencathedral6.labels',
-            'merge-1.ply': 'merge-1.labels',
-            'merge-1-nc.ply': 'merge-1-nc.labels',
-            'merge-2.ply': 'merge-2.labels',
-            'merge-2-nc.ply': 'merge-2-nc.labels'}
+        for testf in self.test_files:
+            self.ascii_files[testf] = testf[0:-3] + 'labels'
+
         self.load_sub_sampled_clouds(cfg.sub_grid_size)
 
 
@@ -313,31 +293,41 @@ class Semantic3D:
     def init_input_pipeline(self):
         print('Initiating input pipelines')
         cfg.ignored_label_inds = [self.label_to_idx[ign_label] for ign_label in self.ignored_labels]
-        gen_function, gen_types, gen_shapes = self.get_batch_gen('training')
-        gen_function_val, _, _ = self.get_batch_gen('validation')
-        gen_function_test, _, _ = self.get_batch_gen('test')
-        self.train_data = tf.data.Dataset.from_generator(gen_function, gen_types, gen_shapes)
-        self.val_data = tf.data.Dataset.from_generator(gen_function_val, gen_types, gen_shapes)
-        self.test_data = tf.data.Dataset.from_generator(gen_function_test, gen_types, gen_shapes)
+        if Mode == 'train':
+            gen_function, gen_types, gen_shapes = self.get_batch_gen('training')
+            gen_function_val, _, _ = self.get_batch_gen('validation')
+            self.train_data = tf.data.Dataset.from_generator(gen_function, gen_types, gen_shapes)
+            self.val_data = tf.data.Dataset.from_generator(gen_function_val, gen_types, gen_shapes)
 
-        self.batch_train_data = self.train_data.batch(cfg.batch_size)
-        self.batch_val_data = self.val_data.batch(cfg.val_batch_size)
-        self.batch_test_data = self.test_data.batch(cfg.val_batch_size)
-        map_func = self.get_tf_mapping()
+            self.batch_train_data = self.train_data.batch(cfg.batch_size)
+            self.batch_val_data = self.val_data.batch(cfg.val_batch_size)
+            map_func = self.get_tf_mapping()
 
-        self.batch_train_data = self.batch_train_data.map(map_func=map_func)
-        self.batch_val_data = self.batch_val_data.map(map_func=map_func)
-        self.batch_test_data = self.batch_test_data.map(map_func=map_func)
+            self.batch_train_data = self.batch_train_data.map(map_func=map_func)
+            self.batch_val_data = self.batch_val_data.map(map_func=map_func)
 
-        self.batch_train_data = self.batch_train_data.prefetch(cfg.batch_size)
-        self.batch_val_data = self.batch_val_data.prefetch(cfg.val_batch_size)
-        self.batch_test_data = self.batch_test_data.prefetch(cfg.val_batch_size)
+            self.batch_train_data = self.batch_train_data.prefetch(cfg.batch_size)
+            self.batch_val_data = self.batch_val_data.prefetch(cfg.val_batch_size)
 
-        iter = tf.data.Iterator.from_structure(self.batch_train_data.output_types, self.batch_train_data.output_shapes)
-        self.flat_inputs = iter.get_next()
-        self.train_init_op = iter.make_initializer(self.batch_train_data)
-        self.val_init_op = iter.make_initializer(self.batch_val_data)
-        self.test_init_op = iter.make_initializer(self.batch_test_data)
+            iter = tf.data.Iterator.from_structure(self.batch_train_data.output_types, self.batch_train_data.output_shapes)
+            self.flat_inputs = iter.get_next()
+            self.train_init_op = iter.make_initializer(self.batch_train_data)
+            self.val_init_op = iter.make_initializer(self.batch_val_data)
+        if Mode == 'test':
+            gen_function, gen_types, gen_shapes = self.get_batch_gen('test')
+            gen_function_test, _, _ = self.get_batch_gen('test')
+            self.test_data = tf.data.Dataset.from_generator(gen_function_test, gen_types, gen_shapes)
+
+            self.batch_test_data = self.test_data.batch(cfg.val_batch_size)
+            map_func = self.get_tf_mapping()
+
+            self.batch_test_data = self.batch_test_data.map(map_func=map_func)
+
+            self.batch_test_data = self.batch_test_data.prefetch(cfg.val_batch_size)
+
+            iter = tf.data.Iterator.from_structure(self.batch_test_data.output_types, self.batch_test_data.output_shapes)
+            self.flat_inputs = iter.get_next()
+            self.test_init_op = iter.make_initializer(self.batch_test_data)
 
 
 if __name__ == '__main__':
@@ -355,7 +345,7 @@ if __name__ == '__main__':
 
     Mode = FLAGS.mode
     data_path = FLAGS.data_path
-    dataset = Semantic3D(data_path)
+    dataset = Semantic3D(data_path, Mode)
     dataset.init_input_pipeline()
 
     if Mode == 'train':

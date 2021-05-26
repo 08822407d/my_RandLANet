@@ -71,7 +71,7 @@ class ConfigSemantic3D:
     num_layers = 6  # Number of layers
     num_points = 65536 # Number of input points
     num_classes = 8  # Number of valid classes
-    sub_grid_size = 0.08  # preprocess_parameter
+    sub_grid_size = 0.06  # preprocess_parameter
 
     batch_size = 4  # batch_size during training
     val_batch_size = 12  # batch_size during validation and test
