@@ -20,20 +20,17 @@ parser.add_argument('--path', type=str, default='None', help='dataset path [defa
 FLAGS = parser.parse_args()
 
 grid_size = FLAGS.size
-dataset_path = ROOT_DIR + FLAGS.path
-print ('---', dataset_path, '---')
-# dataset_path = ROOT_DIR + '/data/semantic3d/original_data'
+# dataset_path = join(ROOT_DIR, FLAGS.path)
+dataset_path = FLAGS.path
 
-original_pc_folder = join(dirname(dataset_path), 'original_ply')
-sub_pc_folder = join(dirname(dataset_path), 'input_{:.3f}'.format(grid_size))
-
-# print( original_pc_folder + " - " + sub_pc_folder)
+original_pc_folder = join(dataset_path, 'original_ply')
+sub_pc_folder = join(dataset_path, 'input_{:.3f}'.format(grid_size))
 
 os.mkdir(original_pc_folder) if not exists(original_pc_folder) else None
 os.mkdir(sub_pc_folder) if not exists(sub_pc_folder) else None
 
-for pc_path in glob.glob(join(dataset_path, '*.txt')):
-    print(pc_path)
+for pc_path in glob.glob(join(dataset_path, 'original_data', '*.txt')):
+    print('pc_path : ', pc_path)
     file_name = pc_path.split('/')[-1][:-4]
 
     # check if it has already calculated

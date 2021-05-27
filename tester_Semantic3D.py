@@ -101,6 +101,7 @@ class ModelTester:
                     t1 = time.time()
                     files = dataset.test_files
                     i_test = 0
+
                     for i, file_path in enumerate(files):
                         # Get file
                         points = self.load_evaluation_points(file_path)
@@ -121,13 +122,10 @@ class ModelTester:
                         # Get the predicted labels
                         preds = dataset.label_values[np.argmax(probs2, axis=1)].astype(np.uint8)
 
-                        # Save plys
-                        cloud_name = file_path.split('/')[-1]
-
                         # Save ascii preds
-                        ascii_name = join(test_path, 'predictions', dataset.ascii_files[cloud_name])
+                        ascii_name = join(test_path, 'predictions', dataset.ascii_files[file_path])
                         np.savetxt(ascii_name, preds, fmt='%d')
-                        log_string(ascii_name + 'has saved', self.log_out)
+                        log_string(ascii_name + ' has saved', self.log_out)
                         i_test += 1
 
                     t2 = time.time()
