@@ -41,10 +41,15 @@ class Semantic3D:
         self.val_files = []
         self.test_files = []
         cloud_names = [file_name[:-4] for file_name in os.listdir(self.original_folder) if file_name[-4:] == '.txt']
+        # for pc_name in cloud_names:
+        #     if Mode == 'train':
+        #         self.train_files.append(join(self.sub_pc_folder, pc_name + '.ply'))
+        #     elif Mode == 'test':
+        #         self.test_files.append(join(self.full_pc_folder, pc_name + '.ply'))
         for pc_name in cloud_names:
-            if Mode == 'train':
+            if exists(join(self.original_folder, pc_name + '.labels')):
                 self.train_files.append(join(self.sub_pc_folder, pc_name + '.ply'))
-            elif Mode == 'test':
+            else:
                 self.test_files.append(join(self.full_pc_folder, pc_name + '.ply'))
 
         self.train_files = np.sort(self.train_files)
@@ -71,8 +76,28 @@ class Semantic3D:
 
         self.ascii_files = {}
         # Ascii files dict for testing
-        for testf in self.test_files:
-            self.ascii_files[testf] = testf[0:-3] + 'labels'
+        # for testf in self.test_files:
+        #     self.ascii_files[testf] = testf[0:-3] + 'labels'
+        self.ascii_files = {
+            'MarketplaceFeldkirch_Station4_rgb_intensity-reduced.ply': 'marketsquarefeldkirch4-reduced.labels',
+            'sg27_station10_rgb_intensity-reduced.ply': 'sg27_10-reduced.labels',
+            'sg28_Station2_rgb_intensity-reduced.ply': 'sg28_2-reduced.labels',
+            'StGallenCathedral_station6_rgb_intensity-reduced.ply': 'stgallencathedral6-reduced.labels',
+            'birdfountain_station1_xyz_intensity_rgb.ply': 'birdfountain1.labels',
+            'castleblatten_station1_intensity_rgb.ply': 'castleblatten1.labels',
+            'castleblatten_station5_xyz_intensity_rgb.ply': 'castleblatten5.labels',
+            'marketplacefeldkirch_station1_intensity_rgb.ply': 'marketsquarefeldkirch1.labels',
+            'marketplacefeldkirch_station4_intensity_rgb.ply': 'marketsquarefeldkirch4.labels',
+            'marketplacefeldkirch_station7_intensity_rgb.ply': 'marketsquarefeldkirch7.labels',
+            'sg27_station10_intensity_rgb.ply': 'sg27_10.labels',
+            'sg27_station3_intensity_rgb.ply': 'sg27_3.labels',
+            'sg27_station6_intensity_rgb.ply': 'sg27_6.labels',
+            'sg27_station8_intensity_rgb.ply': 'sg27_8.labels',
+            'sg28_station2_intensity_rgb.ply': 'sg28_2.labels',
+            'sg28_station5_xyz_intensity_rgb.ply': 'sg28_5.labels',
+            'stgallencathedral_station1_intensity_rgb.ply': 'stgallencathedral1.labels',
+            'stgallencathedral_station3_intensity_rgb.ply': 'stgallencathedral3.labels',
+            'stgallencathedral_station6_intensity_rgb.ply': 'stgallencathedral6.labels'}
 
         self.load_sub_sampled_clouds(cfg.sub_grid_size)
 
